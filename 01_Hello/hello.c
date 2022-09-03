@@ -1,4 +1,4 @@
-/*	simple Hello World, for cc65, for NES
+/*	simple Hello World, for llvm-mos, for NES
  *  writing to the screen with rendering disabled
  *	using neslib
  *	Doug Fraker 2018
