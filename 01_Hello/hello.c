@@ -13,7 +13,7 @@
 
 int main(void) {
   static const char text[] = "Hello World!"; // zero terminated c string
-  static const char palette[] = {BLACK, DK_GY, LT_GY, WHITE, [15] = 0};
+  static const char palette[15] = {BLACK, DK_GY, LT_GY, WHITE};
 
   ppu_off(); // screen off
 
