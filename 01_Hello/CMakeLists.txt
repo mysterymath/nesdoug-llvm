@@ -10,3 +10,5 @@ set(CMAKE_EXECUTABLE_SUFFIX .nes)
 add_executable(hello hello.c chr-rom.s)
 target_include_directories(hello PRIVATE .)
 target_link_libraries(hello neslib)
+set_property(SOURCE chr-rom.s PROPERTY
+  OBJECT_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Alpha.chr)
