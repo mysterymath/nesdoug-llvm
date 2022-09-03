@@ -14,31 +14,32 @@
 // 0x30
 
 int main(void) {
-  const char palette[16] = {BLACK, DK_GY, LT_GY, WHITE};
+  static const char palette[16] = {BLACK, DK_GY, LT_GY, WHITE};
 
   // example of sequential vram data
-  const char text[] = {MSB(NTADR_A(10, 14)) |
-                           NT_UPD_HORZ, // where to write, repeat horizontally
-                       LSB(NTADR_A(10, 14)),
-                       12,  // length of write
-                       'H', // the data to be written, 12 chars
-                       'E',
-                       'L',
-                       'L',
-                       'O',
-                       ' ',
-                       'W',
-                       'O',
-                       'R',
-                       'L',
-                       'D',
-                       '!',
-                       NT_UPD_EOF}; // data must end in EOF
+  static const char text[] = {
+      MSB(NTADR_A(10, 14)) | NT_UPD_HORZ, // where to write, repeat horizontally
+      LSB(NTADR_A(10, 14)),
+      12,  // length of write
+      'H', // the data to be written, 12 chars
+      'E',
+      'L',
+      'L',
+      'O',
+      ' ',
+      'W',
+      'O',
+      'R',
+      'L',
+      'D',
+      '!',
+      NT_UPD_EOF}; // data must end in EOF
 
   // example of non-sequential vram data
-  const char two_letters[] = {MSB(NTADR_A(8, 17)), LSB(NTADR_A(8, 17)), 'A',
-                              MSB(NTADR_A(18, 5)), LSB(NTADR_A(18, 5)), 'B',
-                              NT_UPD_EOF}; // data must end in EOF
+  static const char two_letters[] = {
+      MSB(NTADR_A(8, 17)), LSB(NTADR_A(8, 17)), 'A',
+      MSB(NTADR_A(18, 5)), LSB(NTADR_A(18, 5)), 'B',
+      NT_UPD_EOF}; // data must end in EOF
 
   ppu_off(); // screen off
 

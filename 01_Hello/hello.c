@@ -12,8 +12,8 @@
 #define WHITE 0x30
 
 int main(void) {
-  const char text[] = "Hello World!"; // zero terminated c string
-  const char palette[] = {BLACK, DK_GY, LT_GY, WHITE, [15]=0};
+  static const char text[] = "Hello World!"; // zero terminated c string
+  static const char palette[] = {BLACK, DK_GY, LT_GY, WHITE, [15] = 0};
 
   ppu_off(); // screen off
 
