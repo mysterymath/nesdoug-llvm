@@ -1,4 +1,4 @@
-/*	example code for cc65, for NES
+/*	example code for llvm-mos, for NES
  *  writing a full screen from RLE compressed .h file
  *  -can only be done with rendering off
  *	using neslib
