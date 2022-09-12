@@ -1,5 +1,5 @@
 /*	example code for llvm-mos, for NES
- *  scrolling, with vertical mirroring (horizontal arrangement)
+ *  scrolling, with horizontal mirroring (vertical arrangement)
  *	using neslib
  *	Doug Fraker 2018
  */
@@ -10,8 +10,8 @@
 #include "BG/N.h"    // backgrounds compressed as rle files
 #include "Sprites.h" // holds our metasprite data
 
-// Vertical mirroring.
-asm(".globl __mirroring\n__mirroring = 1\n");
+// Horizontal mirroring (the default).
+asm(".globl __mirroring\n__mirroring = 0\n");
 
 // PROTOTYPES
 void draw_sprites(void);
@@ -42,10 +42,10 @@ int main(void) {
   vram_unrle(N0);
   // this unpacks a compressed full nametable
 
-  vram_adr(NAMETABLE_B);
+  vram_adr(NAMETABLE_C);
   // this sets a start position on the BG, top left of screen B
 
-  vram_unrle(N1);
+  vram_unrle(N2);
   // this unpacks a compressed full nametable
 
   ppu_on_all(); // turn on screen
