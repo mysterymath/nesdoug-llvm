@@ -1,4 +1,4 @@
-/*	example code for llvm-mos, for NES
+/*	example code for cc65, for NES
  *  draw a BG with metatile system
  *	, also sprite collisions with BG
  *	using neslib
@@ -7,7 +7,6 @@
 
 #include <nesdoug.h>
 #include <neslib.h>
-#include <stddef.h>
 #include <string.h>
 
 #include "BG/Room1.h"
@@ -31,6 +30,7 @@ static char c_map[240];
 static char c_map2[240]; // not used in this example
 
 static char pad1;
+static char pad1_new;
 static char collision_L;
 static char collision_R;
 static char collision_U;
@@ -48,28 +48,30 @@ static int hero_velocity_y;
 static unsigned hero_x;
 static unsigned hero_y;
 static char L_R_switch;
+static char stick;
 
 void load_room(void);
 void draw_sprites(void);
 void movement(void);
 void bg_collision(char x, char y, char width, char height);
 char bg_collision_sub(unsigned x, char y);
+void break_wall(void);
 
 int main(void) {
 
   ppu_off(); // screen off
 
   // load the palettes
-  static const unsigned char palette_bg[] = {
-      0x0f, 0x00, 0x10, 0x30, // black, gray, lt gray, white
-      0x0f, 0x07, 0x17, 0x27, // oranges
-      0x0f, 0x02, 0x12, 0x22, // blues
-      0x0f, 0x09, 0x19, 0x29, // greens
+  static const char palette_bg[] = {
+      0x19, 0x00, 0x10, 0x30, // black, gray, lt gray, white
+      0x19, 0x07, 0x17, 0x27, // oranges
+      0x19, 0x02, 0x12, 0x22, // blues
+      0x19, 0x09, 0x19, 0x29, // greens
   };
   pal_bg(palette_bg);
 
-  static const unsigned char palette_sp[16] = {
-      0x0f, 0x07, 0x28, 0x38, // dk brown, yellow, white yellow
+  static const char palette_sp[16] = {
+      0x0f, 0x07, 0x28, 0x38 // dk brown, yellow, white yellow
   };
   pal_spr(palette_sp);
 
@@ -89,7 +91,8 @@ int main(void) {
     // infinite loop
     ppu_wait_nmi(); // wait till beginning of the frame
 
-    pad1 = pad_poll(0); // read the first controller
+    pad1 = pad_poll(0);        // read the first controller
+    pad1_new = get_pad_new(0); // newly pressed button. do pad_poll first
 
     movement();
     draw_sprites();
@@ -98,11 +101,7 @@ int main(void) {
 
 void load_room(void) {
   set_data_pointer(Room1);
-
-  // 5 bytes per metatile definition, tile TL, TR, BL, BR, palette 0-3
-  // T means top, B means bottom, L left,R right
-  // 51 maximum # of metatiles = 255 bytes
-  static const char metatiles1[] = {2, 2, 2, 2, 3, 4, 4, 4, 4, 1, 9, 9, 9,
+  static const char metatiles1[] = {0, 0, 0, 0, 3, 4, 4, 4, 4, 1, 9, 9, 9,
                                     9, 2, 5, 6, 8, 7, 1, 5, 6, 8, 7, 0};
   set_mt_pointer(metatiles1);
   for (char y = 0;; y += 0x20) {
@@ -117,10 +116,21 @@ void load_room(void) {
       break;
   }
 
-  set_vram_update(NULL); // just turn ppu updates OFF for this example
+  // put 1 extra metatile in place
+  buffer_1_mt(NTADR_A(4, 4), 1); // the NTADR_A macro counts tiles, not
+                                 // metatiles
+
+  //  uncomment to make the extra brick orange, by changing 1 attribute table
+  //  byte
+  //	address = get_at_addr(0, 32, 32); // tile 4,4 = pixels 32,32
+  //	one_vram_buffer(0x01,address); // top left = palette 1
 
   // copy the room to the collision map
   memcpy(c_map, Room1, 240);
+
+  c_map[0x22] =
+      1; // make that extra metatile solid
+         // tile 4,4 = metatile 2,2, which is position 0x22 in the collision map
 
   hero_y = BoxGuy1.y << 8;
   hero_x = BoxGuy1.x << 8;
@@ -135,6 +145,12 @@ void draw_sprites(void) {
     oam_meta_spr(BoxGuy1.x, BoxGuy1.y, RoundSprL);
   } else {
     oam_meta_spr(BoxGuy1.x, BoxGuy1.y, RoundSprR);
+  }
+
+  if (stick) {
+    // oam_spr(unsigned char x,unsigned char y,unsigned char chrnum,unsigned
+    // char attr);
+    oam_spr(BoxGuy1.x + 0x0f, BoxGuy1.y, 0x04, 0);
   }
 }
 
@@ -221,6 +237,15 @@ void movement(void) {
     BoxGuy1.y -= eject_D;
   }
   high_byte(hero_y) = BoxGuy1.y;
+
+  // pokey stick
+  if (stick)
+    --stick;
+
+  if (pad1_new & (PAD_A | PAD_B)) {
+    stick = 10; // only do 10 frames worth
+    break_wall();
+  }
 }
 
 void bg_collision(char x, char y, char width, char height) {
@@ -299,5 +324,16 @@ char bg_collision_sub(unsigned x, char y) {
     return c_map2[upper_left];
   } else {
     return c_map[upper_left];
+  }
+}
+
+void break_wall(void) {
+  char x = BoxGuy1.x + 0x16;
+  char y = BoxGuy1.y + 5;
+  char offset = (x >> 4) + (y & 0xf0);
+  if (c_map[offset] == 1) { // if brick
+    c_map[offset] = 0;      // can walk through it
+    buffer_1_mt(get_ppu_addr(0, x, y),
+                0); // put metatile #0 here = blank grass
   }
 }

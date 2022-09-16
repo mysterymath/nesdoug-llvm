@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18)
 set(LLVM_MOS_PLATFORM nes-nrom)
 find_package(llvm-mos-sdk REQUIRED)
 
-project(12_metatiles LANGUAGES C ASM)
+project(13_metatiles LANGUAGES C ASM)
 
 set(CMAKE_EXECUTABLE_SUFFIX .nes)
 
