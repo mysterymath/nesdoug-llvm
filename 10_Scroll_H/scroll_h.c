@@ -10,9 +10,6 @@
 #include "BG/N.h"    // backgrounds compressed as rle files
 #include "Sprites.h" // holds our metasprite data
 
-// Vertical mirroring.
-asm(".globl __mirroring\n__mirroring = 1\n");
-
 // PROTOTYPES
 void draw_sprites(void);
 void scrolling(char pad1);

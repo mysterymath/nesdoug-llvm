@@ -18,9 +18,6 @@
 #define HERO_HEIGHT 13
 #define MAX_RIGHT 0xb000
 
-// Vertical mirroring.
-asm(".globl __mirroring\n__mirroring = 1\n");
-
 struct Hero {
   unsigned x; // low byte is sub-pixel
   unsigned y;

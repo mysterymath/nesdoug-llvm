@@ -10,7 +10,7 @@
 #include "BG/N.h"    // backgrounds compressed as rle files
 #include "Sprites.h" // holds our metasprite data
 
-// Horizontal mirroring (the default).
+// Horizontal mirroring.
 asm(".globl __mirroring\n__mirroring = 0\n");
 
 // PROTOTYPES
