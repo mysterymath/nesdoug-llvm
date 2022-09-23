@@ -1,0 +1,11 @@
+.section .rodata.music_data,"a",@progbits
+.globl music_data
+music_data:
+  .include "DMCmusic.s"
+
+.section .rodata.sounds_data,"a",@progbits
+.globl sounds_data
+sounds_data:
+
+.section .dpcm,"a",@progbits
+  .incbin "DMCmusic.dmc"
