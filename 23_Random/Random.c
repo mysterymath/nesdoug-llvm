@@ -65,16 +65,16 @@ int main(void) {
       char i = 0;
       for (; i < 25; ++i) {
         if (get_frame_count() & 1) { // half the time
-          spr_y[i] = spr_y[i] + 1;   // fall
+          spr_y[i]++;   // fall
         }
         oam_spr(spr_x[i], spr_y[i], 0, 0);
       }
       for (; i < 55; ++i) {
-        spr_y[i] = spr_y[i] + 1; // fall
+        spr_y[i] += 1; // fall
         oam_spr(spr_x[i], spr_y[i], 0, 0);
       }
       for (; i < 64; ++i) {
-        spr_y[i] = spr_y[i] + 2; // fall fast
+        spr_y[i] += 2; // fall fast
         oam_spr(spr_x[i], spr_y[i], 0, 0);
       }
     }
