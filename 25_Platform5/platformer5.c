@@ -210,7 +210,7 @@ void load_room(void) {
     9,  9,  25, 25,  1,
     9,  10, 25, 26,  1,
   };
-  // clang-format off
+  // clang-format on
   set_mt_pointer(metatiles1);
 
   for (char y = 0;; y += 0x20) {
@@ -256,23 +256,27 @@ void draw_sprites(void) {
 
   for (char i = 0; i < MAX_COINS; ++i) {
     char y = coin_y[i];
-    if(y == TURN_OFF) continue;
-    if(get_frame_count() & 8) ++y; // bounce the coin
-    if(coin_active[i] && (y < 0xf0))
+    if (y == TURN_OFF)
+      continue;
+    if (get_frame_count() & 8)
+      ++y; // bounce the coin
+    if (coin_active[i] && (y < 0xf0))
       oam_meta_spr(coin_x[i], y, CoinSpr);
   }
 
-  for(char i = 0; i < MAX_ENEMY; ++i){
-    if(enemy_y[i] == TURN_OFF) continue;
-    if(enemy_x[i] > 0xf0) continue;
-    if(enemy_active[i] && (enemy_y[i] < 0xf0)) {
+  for (char i = 0; i < MAX_ENEMY; ++i) {
+    if (enemy_y[i] == TURN_OFF)
+      continue;
+    if (enemy_x[i] > 0xf0)
+      continue;
+    if (enemy_active[i] && (enemy_y[i] < 0xf0)) {
       oam_meta_spr(enemy_x[i], enemy_y[i], EnemySpr);
     }
   }
 
   // draw "coins" at the top in sprites
-  oam_meta_spr(16,16, CoinsSpr);
-  oam_spr(64,16,coins + 0xf0,3);
+  oam_meta_spr(16, 16, CoinsSpr);
+  oam_spr(64, 16, coins + 0xf0, 3);
 }
 
 void movement(void) {
@@ -394,18 +398,20 @@ void movement(void) {
   }
 }
 
-void enemy_moves(void){
-  if(get_frame_count() & 0x01) return; // half speed
+void enemy_moves(void) {
+  if (get_frame_count() & 0x01)
+    return; // half speed
 
-  for(char i = 0; i < MAX_ENEMY; ++i){
-    if(enemy_active[i]){
-      if(enemy_x[i] > high_byte(BoxGuy1.x)){
-        if(enemy_actual_x[i] == 0) --enemy_room[i];
+  for (char i = 0; i < MAX_ENEMY; ++i) {
+    if (enemy_active[i]) {
+      if (enemy_x[i] > high_byte(BoxGuy1.x)) {
+        if (enemy_actual_x[i] == 0)
+          --enemy_room[i];
         --enemy_actual_x[i];
-      }
-      else if(enemy_x[i] < high_byte(BoxGuy1.x)){
+      } else if (enemy_x[i] < high_byte(BoxGuy1.x)) {
         ++enemy_actual_x[i];
-        if(enemy_actual_x[i] == 0) ++enemy_room[i];
+        if (enemy_actual_x[i] == 0)
+          ++enemy_room[i];
       }
     }
   }
@@ -435,7 +441,8 @@ void bg_collision(char x, char y, char width, char height) {
     y_top += 2; // fix bug, walking through walls
 
   if (bg_collision_sub(x_upper_left,
-                       y_top) & COL_ALL) { // find a corner in the collision map
+                       y_top) &
+      COL_ALL) { // find a corner in the collision map
     ++collision_L;
     ++collision_U;
   }
@@ -487,20 +494,9 @@ void bg_collision(char x, char y, char width, char height) {
 char bg_collision_sub(unsigned x, char y) {
   char upper_left = ((x & 0xff) >> 4) + (y & 0xf0);
   char typ = (x & 1 << 8 ? c_map2 : c_map)[upper_left];
-  static const char is_solid[]={
-    0,
-    COL_DOWN,
-    COL_ALL+COL_DOWN,
-    COL_DOWN,
-    COL_DOWN,
-    COL_DOWN,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  };
+  static const char is_solid[] = {
+      0, COL_DOWN, COL_ALL + COL_DOWN, COL_DOWN, COL_DOWN, COL_DOWN, 0, 0, 0, 0,
+      0, 0};
   return is_solid[typ];
 }
 
@@ -559,20 +555,18 @@ void bg_check_low(char x, char y, char width, char height) {
     collision_D = 0; // for platforms, only collide with the top 3 pixels
 }
 
-
-void sprite_collisions(void){
+void sprite_collisions(void) {
   struct Box {
     char x, y, width, height;
   };
 
-  struct Box boxguy1_box = {
-    high_byte(BoxGuy1.x), high_byte(BoxGuy1.y), HERO_WIDTH, HERO_HEIGHT
-  };
+  struct Box boxguy1_box = {high_byte(BoxGuy1.x), high_byte(BoxGuy1.y),
+                            HERO_WIDTH, HERO_HEIGHT};
   struct Box other_box;
 
   other_box.width = COIN_WIDTH;
   other_box.height = COIN_HEIGHT;
-  for (char i = 0; i < MAX_COINS; ++i ){
+  for (char i = 0; i < MAX_COINS; ++i) {
     if (!coin_active[i])
       continue;
 
@@ -608,7 +602,7 @@ void check_spr_objects(void) {
   // mark each object "active" if they are, and get the screen x
 
   for (char i = 0; i < MAX_COINS; ++i) {
-    coin_active[i] = 0; //default to zero
+    coin_active[i] = 0; // default to zero
     if (coin_y[i] != TURN_OFF) {
       unsigned x = (coin_room[i] << 8) + coin_actual_x[i] - scroll_x;
       coin_active[i] = !high_byte(x);
@@ -616,9 +610,8 @@ void check_spr_objects(void) {
     }
   }
 
-
   for (char i = 0; i < MAX_ENEMY; ++i) {
-    enemy_active[i] = 0; //default to zero
+    enemy_active[i] = 0; // default to zero
     if (enemy_y[i] != TURN_OFF) {
       unsigned x = (enemy_room[i] << 8) + enemy_actual_x[i] - scroll_x;
       enemy_active[i] = !high_byte(x);
@@ -629,7 +622,7 @@ void check_spr_objects(void) {
 
 void sprite_obj_init(void) {
   char i, j;
-  for (i = 0,j = 0; i < MAX_COINS; ++i) {
+  for (i = 0, j = 0; i < MAX_COINS; ++i) {
     coin_x[i] = 0;
     coin_y[i] = level_1_coins[j++];
     if (coin_y[i] == TURN_OFF)
@@ -641,7 +634,7 @@ void sprite_obj_init(void) {
   for (++i; i < MAX_COINS; ++i)
     coin_y[i] = TURN_OFF;
 
-  for (i = 0,j = 0; i < MAX_ENEMY; ++i) {
+  for (i = 0, j = 0; i < MAX_ENEMY; ++i) {
     enemy_x[i] = 0;
     enemy_y[i] = level_1_enemies[j++];
     if (enemy_y[i] == TURN_OFF)
@@ -652,4 +645,4 @@ void sprite_obj_init(void) {
   }
   for (++i; i < MAX_ENEMY; ++i)
     enemy_y[i] = TURN_OFF;
- }
+}
