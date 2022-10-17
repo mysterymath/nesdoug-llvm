@@ -12,7 +12,13 @@ add_executable(hello_mmc1
   chr-rom.s
 )
 target_include_directories(hello_mmc1 PRIVATE .)
-target_link_libraries(hello_mmc1 nesdoug neslib famitone2 music)
+target_link_libraries(hello_mmc1
+  nesdoug
+  neslib
+  ft2-fixed-wrappers
+  famitone2
+  music
+)
 target_link_directories(hello_mmc1 PRIVATE .)
 target_link_options(hello_mmc1 PRIVATE -Thello_mmc1.ld)
 set_property(SOURCE chr-rom.s PROPERTY OBJECT_DEPENDS
