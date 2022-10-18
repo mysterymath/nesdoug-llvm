@@ -13,6 +13,8 @@ add_executable(hello_mmc1
 )
 target_include_directories(hello_mmc1 PRIVATE .)
 target_link_libraries(hello_mmc1 nesdoug neslib famitone2 music)
+target_link_directories(hello_mmc1 PRIVATE .)
+target_link_options(hello_mmc1 PRIVATE -Thello_mmc1.ld)
 set_property(SOURCE chr-rom.s PROPERTY OBJECT_DEPENDS
   ${CMAKE_CURRENT_SOURCE_DIR}/Alpha.chr
   ${CMAKE_CURRENT_SOURCE_DIR}/Alpha2.chr
