@@ -8,6 +8,9 @@
 
 asm(".globl __prg_ram_size;\n__prg_ram_size = 8\n");
 
+// Pull in bank-switching wrappers in the fixed bank for famitone functions.
+asm(".globl famitone_fixed_wrappers\n");
+
 enum { BANK_0, BANK_1, BANK_2, BANK_3, BANK_4, BANK_5, BANK_6 };
 // 7 shouldn't be needed, that's the fixed bank, just call it normally
 
