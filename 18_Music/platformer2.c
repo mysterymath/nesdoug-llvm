@@ -70,7 +70,10 @@ char bg_collision_sub(unsigned x, char y);
 void bg_check_low(char x, char y, char width, char height);
 void change_song(void);
 
+extern const char music_data[];
+
 int main(void) {
+  music_init(music_data);
 
   ppu_off(); // screen off
 

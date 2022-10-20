@@ -72,7 +72,12 @@ void bg_check_low(char x, char y, char width, char height);
 void change_song(void);
 void check_sfx(void);
 
+extern const char music_data[];
+extern const char sounds_data[];
+
 int main(void) {
+  music_init(music_data);
+  sounds_init(sounds_data);
 
   ppu_off(); // screen off
 

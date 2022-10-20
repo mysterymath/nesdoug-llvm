@@ -101,7 +101,12 @@ void sprite_collisions(void);
 void check_spr_objects(void);
 void sprite_obj_init(void);
 
+extern const char music_data[];
+extern const char sounds_data[];
+
 int main(void) {
+  music_init(music_data);
+  sounds_init(sounds_data);
 
   ppu_off(); // screen off
 

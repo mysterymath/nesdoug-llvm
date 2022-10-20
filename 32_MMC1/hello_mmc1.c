@@ -125,7 +125,13 @@ __attribute__((noinline)) void function_bank6(void) {
 
 void draw_sprites(void);
 
+extern const char music_data[];
+extern const char sounds_data[];
+
 int main(void) {
+  music_init(music_data);
+  sounds_init(sounds_data);
+
   set_mmc1_ctrl(0x1f);
   set_prg_bank(0);
   set_chr_bank_0(0);

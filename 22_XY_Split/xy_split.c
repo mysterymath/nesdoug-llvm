@@ -74,7 +74,12 @@ void change_song(void);
 void check_sfx(void);
 void set_sprite_zero(void);
 
+extern const char music_data[];
+extern const char sounds_data[];
+
 int main(void) {
+  music_init(music_data);
+  sounds_init(sounds_data);
 
   ppu_off(); // screen off
 

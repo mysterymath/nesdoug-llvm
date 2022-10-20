@@ -125,7 +125,13 @@ void set_sprite_zero(void);
 void update_hud(void);
 void bg_collision_fast(char x, char y, char width);
 
+extern const char music_data[];
+extern const char sounds_data[];
+
 int main(void) {
+  music_init(music_data);
+  sounds_init(sounds_data);
+
   ppu_off(); // screen off
 
   // use the second set of tiles for sprites
