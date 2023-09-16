@@ -192,7 +192,7 @@ int main(void) {
     if (pad1_new & PAD_START) {
       char_state = (char_state + 1) & 3; // keep 0-3
 
-      set_chr_bank_0(char_state); // switch the BG bank
+      defer_chr_bank_0(char_state); // switch the BG bank
       // note just the tileset #0 is changed,
       // the sprite bank would have to be changed with
       // set_chr_bank_1();
