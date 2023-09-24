@@ -3,9 +3,9 @@
  */
 
 #include <6502.h>
-#include <bank.h>
 #include <nesdoug.h>
 #include <neslib.h>
+#include <mapper.h>
 #include <string.h>
 
 asm (".globl __prg_ram_size\n__prg_ram_size=8\n");

@@ -2,9 +2,9 @@
  *	Doug Fraker 2019, 2022
  */
 
-#include <bank.h>
 #include <nesdoug.h>
 #include <neslib.h>
+#include <mapper.h>
 
 asm(".globl __prg_ram_size;\n__prg_ram_size = 8\n");
 
